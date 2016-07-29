@@ -192,7 +192,7 @@ class TestMonitoring(TestOffsetsBase):
     def _has_no_partitions(self, offsets_metadata):
         return all(
             not partitions
-            for partitions in offsets_metadata.values()
+            for partitions in list(offsets_metadata.values())
         )
 
     def test_dual_offsets_zk_empty(self, kafka_client_mock):

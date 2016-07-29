@@ -106,7 +106,7 @@ class RebalanceCmd(ClusterManagerCmd):
         if self.args.replication_groups:
             self.log.info(
                 'Re-balancing replica-count over replication groups: %s',
-                ', '.join(ct.rgs.keys()),
+                ', '.join(list(ct.rgs.keys())),
             )
             ct.rebalance_replication_groups()
 
@@ -114,7 +114,7 @@ class RebalanceCmd(ClusterManagerCmd):
         if self.args.brokers:
             self.log.info(
                 'Re-balancing partition-count across brokers: %s',
-                ', '.join(str(e) for e in ct.brokers.keys()),
+                ', '.join(str(e) for e in list(ct.brokers.keys())),
             )
             ct.rebalance_brokers()
 
@@ -122,7 +122,7 @@ class RebalanceCmd(ClusterManagerCmd):
         if self.args.leaders:
             self.log.info(
                 'Re-balancing leader-count across brokers: %s',
-                ', '.join(str(e) for e in ct.brokers.keys()),
+                ', '.join(str(e) for e in list(ct.brokers.keys())),
             )
             ct.rebalance_leaders()
         return ct.assignment

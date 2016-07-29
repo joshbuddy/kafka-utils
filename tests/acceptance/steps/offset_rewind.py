@@ -43,17 +43,17 @@ def call_offset_rewind(groupid, topic, storage=None, force=False):
     return call_cmd(cmd)
 
 
-@when(u'we call the offset_rewind command with a groupid and topic')
+@when('we call the offset_rewind command with a groupid and topic')
 def step_impl3(context):
     call_offset_rewind(context.group, context.topic)
 
 
-@when(u'we call the offset_rewind command and commit into kafka')
+@when('we call the offset_rewind command and commit into kafka')
 def step_impl3_2(context):
     call_offset_rewind(context.group, context.topic, storage='kafka')
 
 
-@when(u'we call the offset_rewind command with a new groupid and the force option')
+@when('we call the offset_rewind command with a new groupid and the force option')
 def step_impl2(context):
     context.group = 'offset_advance_created_group'
     call_offset_rewind(
@@ -63,7 +63,7 @@ def step_impl2(context):
     )
 
 
-@then(u'the committed offsets will match the earliest message offsets')
+@then('the committed offsets will match the earliest message offsets')
 def step_impl4(context):
     cluster_config = get_cluster_config()
     with ZK(cluster_config) as zk:
@@ -71,7 +71,7 @@ def step_impl4(context):
     assert offsets[context.topic]["0"] == 0
 
 
-@then(u'the earliest message offsets will be shown')
+@then('the earliest message offsets will be shown')
 def step_impl5_2(context):
     offset = 0
     pattern = 'Current Offset: {}'.format(offset)

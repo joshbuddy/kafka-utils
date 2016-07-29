@@ -12,9 +12,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from __future__ import absolute_import
-from __future__ import print_function
-from __future__ import unicode_literals
+
+
+
 
 import sys
 from collections import defaultdict
@@ -66,8 +66,8 @@ def create_offsets(zk, consumer_group, offsets):
     :type offsets: dict(topic, dict(partition, offset))
     """
     # Create new offsets
-    for topic, partition_offsets in offsets.iteritems():
-        for partition, offset in partition_offsets.iteritems():
+    for topic, partition_offsets in offsets.items():
+        for partition, offset in partition_offsets.items():
             new_path = "/consumers/{groupid}/offsets/{topic}/{partition}".format(
                 groupid=consumer_group,
                 topic=topic,
@@ -93,7 +93,7 @@ def fetch_offsets(zk, consumer_group, topics):
     :rtype: dict(topic, dict(partition, offset))
     """
     source_offsets = defaultdict(dict)
-    for topic, partitions in topics.iteritems():
+    for topic, partitions in topics.items():
         for partition in partitions:
             offset, _ = zk.get(
                 "/consumers/{groupid}/offsets/{topic}/{partition}".format(
@@ -108,7 +108,7 @@ def fetch_offsets(zk, consumer_group, topics):
 
 def prompt_user_input(in_str):
     while(True):
-        answer = raw_input(in_str + ' ')
+        answer = input(in_str + ' ')
         if answer == "n" or answer == "no":
             sys.exit(0)
         if answer == "y" or answer == "yes":

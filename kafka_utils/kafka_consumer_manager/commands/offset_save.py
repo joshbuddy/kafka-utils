@@ -12,9 +12,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from __future__ import absolute_import
-from __future__ import print_function
-from __future__ import unicode_literals
+
+
+
 
 import json
 import sys
@@ -135,7 +135,7 @@ class OffsetSave(OffsetManagerBase):
         """
         # Build consumer-offset data in desired format
         current_consumer_offsets = defaultdict(dict)
-        for topic, topic_offsets in consumer_offsets_metadata.iteritems():
+        for topic, topic_offsets in consumer_offsets_metadata.items():
             for partition_offset in topic_offsets:
                 current_consumer_offsets[topic][partition_offset.partition] = \
                     partition_offset.current

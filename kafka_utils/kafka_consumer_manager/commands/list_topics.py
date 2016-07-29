@@ -12,7 +12,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from __future__ import absolute_import
+
 
 import sys
 
@@ -51,15 +51,15 @@ class ListTopics(OffsetManagerBase):
             False
         )
         if not topics_dict:
-            print(
+            print((
                 "Consumer Group ID: {group} does not exist in "
                 "Zookeeper".format(
                     group=args.groupid
                 )
-            )
+            ))
             sys.exit(1)
 
-        print("Consumer Group ID: {groupid}".format(groupid=args.groupid))
-        for topic, partitions in topics_dict.iteritems():
-            print("\tTopic: {topic}".format(topic=topic))
-            print("\t\tPartitions: {partitions}".format(partitions=partitions))
+        print(("Consumer Group ID: {groupid}".format(groupid=args.groupid)))
+        for topic, partitions in topics_dict.items():
+            print(("\tTopic: {topic}".format(topic=topic)))
+            print(("\t\tPartitions: {partitions}".format(partitions=partitions)))

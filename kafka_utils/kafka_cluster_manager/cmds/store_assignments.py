@@ -60,4 +60,4 @@ class StoreAssignmentsCmd(ClusterManagerCmd):
                 f.write(plan_json)
         else:
             self.log.info('writing assignments as json to stdout')
-            print plan_json
+            print(plan_json)

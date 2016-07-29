@@ -35,7 +35,7 @@ def step_impl2(context):
     call_unsubscribe_topics(context.group)
 
 
-@then(u'the committed offsets will no longer exist in zookeeper')
+@then('the committed offsets will no longer exist in zookeeper')
 def step_impl4(context):
     cluster_config = get_cluster_config()
     with ZK(cluster_config) as zk:

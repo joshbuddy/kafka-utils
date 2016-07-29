@@ -12,8 +12,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from __future__ import absolute_import
-from __future__ import print_function
+
+
 
 from kazoo.exceptions import NoNodeError
 
@@ -76,11 +76,11 @@ def get_min_isr(zk, topic):
 
 def process_metadata_response(topics, zk, default_min_isr, verbose):
     not_in_sync = 0
-    for topic_name, partitions in topics.items():
+    for topic_name, partitions in list(topics.items()):
         min_isr = get_min_isr(zk, topic_name) or default_min_isr
         if min_isr is None:
             continue
-        for metadata in partitions.values():
+        for metadata in list(partitions.values()):
             cur_isr = len(metadata.isr)
             if cur_isr < min_isr:
                 if verbose:

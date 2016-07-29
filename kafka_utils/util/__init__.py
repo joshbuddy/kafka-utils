@@ -12,7 +12,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from __future__ import print_function
+
 
 import json
 import sys
@@ -26,7 +26,7 @@ def groupsortby(data, key):
 
 def dict_merge(set1, set2):
     """Joins two dictionaries."""
-    return dict(set1.items() + set2.items())
+    return dict(list(set1.items()) + list(set2.items()))
 
 
 def to_h(num, suffix='B'):

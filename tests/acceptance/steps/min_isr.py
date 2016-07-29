@@ -14,8 +14,8 @@
 # limitations under the License.
 from behave import then
 from behave import when
-from util import call_cmd
-from util import get_cluster_config
+from .util import call_cmd
+from .util import get_cluster_config
 
 from kafka_utils.util.zookeeper import ZK
 
@@ -41,27 +41,27 @@ def set_min_isr(topic, min_isr):
         zk.set_topic_config(topic, config)
 
 
-@when(u'we call the min_isr command')
+@when('we call the min_isr command')
 def step_impl2(context):
     context.min_isr_out = call_min_isr()
 
 
-@when(u'we change min.isr settings for a topic to 1')
+@when('we change min.isr settings for a topic to 1')
 def step_impl3(context):
     set_min_isr(context.topic, 1)
 
 
-@when(u'we change min.isr settings for a topic to 2')
+@when('we change min.isr settings for a topic to 2')
 def step_impl4(context):
     set_min_isr(context.topic, 2)
 
 
-@then(u'OK min_isr will be printed')
+@then('OK min_isr will be printed')
 def step_impl5(context):
     assert context.min_isr_out == 'OK: All replicas in sync.\n', context.min_isr_out
 
 
-@then(u'CRITICAL min_isr will be printed')
+@then('CRITICAL min_isr will be printed')
 def step_impl6(context):
     error_msg = ("CRITICAL: 1 partition(s) have the number of "
                  "replicas in sync that is lower than the specified min ISR.\n").format(

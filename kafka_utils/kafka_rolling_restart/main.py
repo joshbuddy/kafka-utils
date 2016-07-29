@@ -12,8 +12,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from __future__ import division
-from __future__ import print_function
+
+
 
 import argparse
 import itertools
@@ -130,7 +130,7 @@ def get_broker_list(cluster_config):
     :type cluster_config: map
     """
     with ZK(cluster_config) as zk:
-        brokers = sorted(zk.get_brokers().items(), key=itemgetter(0))
+        brokers = sorted(list(zk.get_brokers().items()), key=itemgetter(0))
         return [(id, data['host']) for id, data in brokers]
 
 
@@ -209,7 +209,7 @@ def ask_confirmation():
     """
     while True:
         print("Do you want to restart these brokers? ", end="")
-        choice = raw_input().lower()
+        choice = input().lower()
         if choice in ['yes', 'y']:
             return True
         elif choice in ['no', 'n']:

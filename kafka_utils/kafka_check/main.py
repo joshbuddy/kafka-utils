@@ -16,8 +16,8 @@
 Kafka checks module.
 Each check is separated subcommand for kafka-check.
 """
-from __future__ import absolute_import
-from __future__ import print_function
+
+
 
 import argparse
 import logging

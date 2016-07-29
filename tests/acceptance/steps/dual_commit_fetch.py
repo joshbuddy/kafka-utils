@@ -47,16 +47,16 @@ def fetch_offsets(group, topics, storage):
     return offsets
 
 
-@when(u'we commit some offsets for a group into kafka')
+@when('we commit some offsets for a group into kafka')
 def step_impl4(context):
     context.offsets = {context.topic: {0: TEST_OFFSET}}
     context.group = create_random_group_id()
     commit_offsets(context.offsets, context.group, 'kafka')
 
 
-@when(u'we fetch offsets for the group with the dual option')
+@when('we fetch offsets for the group with the dual option')
 def step_impl4_2(context):
-    topics = context.offsets.keys()
+    topics = list(context.offsets.keys())
     context.fetched_offsets = fetch_offsets(
         context.group,
         topics,
@@ -64,9 +64,9 @@ def step_impl4_2(context):
     )
 
 
-@when(u'we fetch offsets for the group with the kafka option')
+@when('we fetch offsets for the group with the kafka option')
 def step_impl4_3(context):
-    topics = context.offsets.keys()
+    topics = list(context.offsets.keys())
     context.fetched_offsets = fetch_offsets(
         context.group,
         topics,
@@ -74,6 +74,6 @@ def step_impl4_3(context):
     )
 
 
-@then(u'the fetched offsets will match the committed offsets')
+@then('the fetched offsets will match the committed offsets')
 def step_impl5(context):
     assert context.fetched_offsets == context.offsets

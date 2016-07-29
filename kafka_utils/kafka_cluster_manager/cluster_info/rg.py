@@ -275,7 +275,7 @@ class ReplicationGroup(object):
         # minimum same-partition-count
         # Set result in format: (source, dest, preferred-partition)
         target = (None, None, None)
-        min_distance = sys.maxint
+        min_distance = sys.maxsize
         best_partition = None
         for source in over_loaded_brokers:
             for dest in under_loaded_brokers:
@@ -324,7 +324,7 @@ class ReplicationGroup(object):
 
     def update_sibling_distance(self, sibling_distance, dest, topic):
         """Update the sibling distance for topic and destination broker."""
-        for source in sibling_distance[dest].iterkeys():
+        for source in sibling_distance[dest].keys():
             sibling_distance[dest][source][topic] = \
                 dest.count_partitions(topic) - \
                 source.count_partitions(topic)
@@ -360,14 +360,14 @@ class ReplicationGroup(object):
         victim-partition. This is because a broker cannot have duplicate replica.
         2) At-least one broker in over-loaded group which has victim-partition
         """
-        under_brokers = filter(
+        under_brokers = list(filter(
             lambda b: eligible_partition not in b.partitions,
             under_loaded_rg.brokers,
-        )
-        over_brokers = filter(
+        ))
+        over_brokers = list(filter(
             lambda b: eligible_partition in b.partitions,
             self.brokers,
-        )
+        ))
 
         # Get source and destination broker
         source_broker, dest_broker = None, None

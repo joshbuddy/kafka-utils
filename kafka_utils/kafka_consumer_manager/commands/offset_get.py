@@ -12,9 +12,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from __future__ import absolute_import
-from __future__ import print_function
-from __future__ import unicode_literals
+
+
+
 
 import sys
 
@@ -121,7 +121,7 @@ class OffsetGet(OffsetManagerBase):
 
     @classmethod
     def print_output(cls, consumer_offsets_metadata, watermark_filter):
-        for topic, metadata_tuples in consumer_offsets_metadata.iteritems():
+        for topic, metadata_tuples in consumer_offsets_metadata.items():
             print ("Topic Name: {topic}".format(topic=topic))
             for metadata_tuple in metadata_tuples:
                 print (

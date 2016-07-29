@@ -12,9 +12,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from __future__ import absolute_import
-from __future__ import print_function
-from __future__ import unicode_literals
+
+
+
 
 import sys
 
@@ -90,7 +90,7 @@ class CopyGroup(OffsetManagerBase):
             else:
                 preprocess_topics(
                     args.source_groupid,
-                    source_topics.keys(),
+                    list(source_topics.keys()),
                     args.dest_groupid,
                     topics_dest_group,
                 )

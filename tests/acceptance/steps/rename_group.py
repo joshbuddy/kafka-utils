@@ -34,12 +34,12 @@ def call_rename_group(old_group, new_group):
     return call_cmd(cmd)
 
 
-@when(u'we call the rename_group command with a new groupid')
+@when('we call the rename_group command with a new groupid')
 def step_impl2(context):
     call_rename_group(NEW_GROUP)
 
 
-@then(u'the committed offsets in the new group will match the expected values')
+@then('the committed offsets in the new group will match the expected values')
 def step_impl4(context):
     cluster_config = get_cluster_config()
     with ZK(cluster_config) as zk:

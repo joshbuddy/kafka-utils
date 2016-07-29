@@ -12,9 +12,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import unicode_literals
+
+
+
 
 import logging
 from collections import OrderedDict
@@ -73,7 +73,7 @@ class ClusterTopology(object):
 
     def _build_brokers(self, brokers):
         """Build broker objects using broker-ids."""
-        for broker_id, metadata in brokers.iteritems():
+        for broker_id, metadata in brokers.items():
             self.brokers[broker_id] = self._create_broker(broker_id, metadata)
 
     def _create_broker(self, broker_id, metadata=None):
@@ -95,7 +95,7 @@ class ClusterTopology(object):
         topic objects.
         """
         self.partitions = {}
-        for partition_name, replica_ids in assignment.iteritems():
+        for partition_name, replica_ids in assignment.items():
             # Get topic
             topic_id = partition_name[0]
             partition_id = partition_name[1]
@@ -112,7 +112,7 @@ class ClusterTopology(object):
             # Updating corresponding broker objects
             for broker_id in replica_ids:
                 # Check if broker-id is present in current active brokers
-                if broker_id not in self.brokers.keys():
+                if broker_id not in list(self.brokers.keys()):
                     self.log.warning(
                         "Broker %s containing partition %s is not in "
                         "active brokers.",
@@ -126,12 +126,12 @@ class ClusterTopology(object):
     @property
     def assignment(self):
         assignment = {}
-        for partition in self.partitions.itervalues():
+        for partition in self.partitions.values():
             assignment[
                 (partition.topic.id, partition.partition_id)
             ] = [broker.id for broker in partition.replicas]
         # assignment map created in sorted order for deterministic solution
-        return OrderedDict(sorted(assignment.items(), key=lambda t: t[0]))
+        return OrderedDict(sorted(list(assignment.items()), key=lambda t: t[0]))
 
     def rebalance_replication_groups(self):
         """Rebalance partitions over replication groups.
@@ -142,7 +142,7 @@ class ClusterTopology(object):
         of the cluster.
         """
         # Balance replicas over replication-groups for each partition
-        if any(b.inactive for b in self.brokers.itervalues()):
+        if any(b.inactive for b in self.brokers.values()):
             self.log.error(
                 "Impossible to rebalance replication groups because of inactive "
                 "brokers."
@@ -152,7 +152,7 @@ class ClusterTopology(object):
                 "brokers"
             )
 
-        for partition in self.partitions.itervalues():
+        for partition in self.partitions.values():
             self._rebalance_partition(partition)
 
         # Balance partition-count over replication-groups
@@ -214,7 +214,7 @@ class ClusterTopology(object):
 
     def _force_broker_decommission(self, broker):
         available_groups = [
-            rg for rg in self.rgs.itervalues()
+            rg for rg in self.rgs.values()
             if rg is not broker.replication_group
         ]
 
@@ -266,10 +266,10 @@ class ClusterTopology(object):
         # Separate replication-groups into under and over replicated
         total = sum(
             group.count_replica(partition)
-            for group in self.rgs.itervalues()
+            for group in self.rgs.values()
         )
         over_replicated_rgs, under_replicated_rgs = separate_groups(
-            self.rgs.values(),
+            list(self.rgs.values()),
             lambda g: g.count_replica(partition),
             total,
         )
@@ -301,7 +301,7 @@ class ClusterTopology(object):
                 break
             # Re-compute under and over-replicated replication-groups
             over_replicated_rgs, under_replicated_rgs = separate_groups(
-                self.rgs.values(),
+                list(self.rgs.values()),
                 lambda g: g.count_replica(partition),
                 total,
             )
@@ -358,9 +358,9 @@ class ClusterTopology(object):
         6) Repeat steps 1) to 5) until groups are balanced or cannot be balanced further.
         """
         # Segregate replication-groups based on partition-count
-        total_elements = sum(len(rg.partitions) for rg in self.rgs.itervalues())
+        total_elements = sum(len(rg.partitions) for rg in self.rgs.values())
         over_loaded_rgs, under_loaded_rgs = separate_groups(
-            self.rgs.values(),
+            list(self.rgs.values()),
             lambda rg: len(rg.partitions),
             total_elements,
         )
@@ -413,7 +413,7 @@ class ClusterTopology(object):
     # Re-balancing partition count across brokers
     def rebalance_brokers(self):
         """Rebalance partition-count across brokers within each replication-group."""
-        for rg in self.rgs.itervalues():
+        for rg in self.rgs.values():
             rg.rebalance_brokers()
 
     # Re-balancing leaders
@@ -446,20 +446,20 @@ class ClusterTopology(object):
             2. If path found, update UB-broker and delete path-edges (skip-partitions).
             3. Continue with step-1 until all possible paths explored.
         """
-        under_brokers = filter(
+        under_brokers = list(filter(
             lambda b: b.count_preferred_replica() < opt_cnt,
-            self.brokers.itervalues(),
-        )
+            iter(self.brokers.values()),
+        ))
         if under_brokers:
             skip_brokers, skip_partitions = [], []
             for broker in under_brokers:
                 skip_brokers.append(broker)
                 broker.request_leadership(opt_cnt, skip_brokers, skip_partitions)
 
-        over_brokers = filter(
+        over_brokers = list(filter(
             lambda b: b.count_preferred_replica() > opt_cnt + 1,
-            self.brokers.itervalues(),
-        )
+            iter(self.brokers.values()),
+        ))
         # Any over-balanced brokers tries to donate their leadership to followers
         if over_brokers:
             skip_brokers, used_edges = [], []
@@ -478,7 +478,7 @@ class ClusterTopology(object):
         :raises: InvalidPartitionError when partition-name is invalid
         """
         try:
-            for partition_name, replica_ids in assignment.iteritems():
+            for partition_name, replica_ids in assignment.items():
                 try:
                     new_replicas = [self.brokers[b_id] for b_id in replica_ids]
                 except KeyError:

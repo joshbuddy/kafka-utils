@@ -12,12 +12,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from __future__ import absolute_import
-from __future__ import print_function
-from __future__ import unicode_literals
+
+
+
 
 import argparse
-import ConfigParser
+import configparser
 import importlib
 import inspect
 import logging
@@ -133,7 +133,7 @@ def configure_logging(log_conf=None):
     if log_conf:
         try:
             fileConfig(log_conf, disable_existing_loggers=False)
-        except ConfigParser.NoSectionError:
+        except configparser.NoSectionError:
             logging.basicConfig(level=logging.INFO)
             _log.error(
                 'Failed to load {logconf} file.'

@@ -12,8 +12,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from __future__ import absolute_import
-from __future__ import print_function
+
+
 
 import sys
 
@@ -114,7 +114,7 @@ class TopicUnsubscriber(object):
         elif topic:
             self.delete_topic(group, topic)
         else:
-            for topic, partitions in topics_dict.iteritems():
+            for topic, partitions in topics_dict.items():
                 self.delete_topic(group, topic)
 
     def unsubscribe_partitions(self, group, topic, partitions):

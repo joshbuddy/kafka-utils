@@ -85,7 +85,10 @@ class ZK:
                 "broker '{b_id}' not found.".format(b_id=broker_id),
             )
             raise
-        return json.loads(broker_json)
+
+        print("broker_json", broker_json)
+
+        return json.loads(broker_json.decode())
 
     def get_brokers(self, names_only=False):
         """Get information on all the available brokers.
@@ -194,7 +197,7 @@ class ZK:
                 return {}
             # Prepare data for each partition
             partitions_data = {}
-            for p_id, replicas in topic_data['partitions'].iteritems():
+            for p_id, replicas in topic_data['partitions'].items():
                 partitions_data[p_id] = {}
                 if fetch_partition_state:
                     # Fetch partition-state from zookeeper
@@ -476,8 +479,8 @@ class ZK:
                 'partition': int(p_id),
                 'replicas': partitions_data['replicas']
             }
-            for topic_id, topic_info in cluster_layout.iteritems()
-            for p_id, partitions_data in topic_info['partitions'].iteritems()
+            for topic_id, topic_info in cluster_layout.items()
+            for p_id, partitions_data in topic_info['partitions'].items()
         ]
         return {
             'version': 1,

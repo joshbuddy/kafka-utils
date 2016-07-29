@@ -38,19 +38,19 @@ def call_offset_save(groupid, offsets_file, storage=None):
     return call_cmd(cmd)
 
 
-@when(u'we call the offset_save command with an offsets file')
+@when('we call the offset_save command with an offsets file')
 def step_impl2(context):
     context.offsets_file = create_saved_file()
     call_offset_save(context.group, context.offsets_file.name)
 
 
-@when(u'we call the offset_save command with an offsets file and kafka storage')
+@when('we call the offset_save command with an offsets file and kafka storage')
 def step_impl2_2(context):
     context.offsets_file = create_saved_file()
     call_offset_save(context.group, context.offsets_file.name, storage='kafka')
 
 
-@then(u'the correct offsets will be saved into the given file')
+@then('the correct offsets will be saved into the given file')
 def step_impl3(context):
     offsets = context.consumer.offsets(group='commit')
     key = (context.topic, 0)
@@ -61,7 +61,7 @@ def step_impl3(context):
     context.offsets_file.close()
 
 
-@then(u'the restored offsets will be saved into the given file')
+@then('the restored offsets will be saved into the given file')
 def step_impl3_2(context):
     offset = context.restored_offset
 

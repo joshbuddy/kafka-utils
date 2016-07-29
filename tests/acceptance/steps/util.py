@@ -96,7 +96,7 @@ def create_random_group_id():
 def produce_example_msg(topic, num_messages=1):
     kafka = KafkaToolClient(KAFKA_URL)
     producer = SimpleProducer(kafka)
-    for i in xrange(num_messages):
+    for i in range(num_messages):
         try:
             producer.send_messages(topic, b'some message')
         except LeaderNotAvailableError:
@@ -113,8 +113,8 @@ def create_consumer_group(topic, group_name, num_messages=1):
         auto_commit_enable=False,
         bootstrap_servers=[KAFKA_URL],
         auto_offset_reset='smallest')
-    for i in xrange(num_messages):
-        message = consumer.next()
+    for i in range(num_messages):
+        message = next(consumer)
         consumer.task_done(message)
     consumer.commit()
     return consumer

@@ -107,7 +107,7 @@ def _validate_topics_list_or_dict(topics):
 def _verify_topics_and_partitions(kafka_client, topics, raise_on_error):
     topics = _validate_topics_list_or_dict(topics)
     valid_topics = {}
-    for topic, partitions in topics.iteritems():
+    for topic, partitions in topics.items():
         # Check topic exists
         if not kafka_client.has_metadata_for_topic(topic):
             if raise_on_error:
@@ -148,13 +148,13 @@ def _verify_commit_offsets_requests(kafka_client, new_offsets, raise_on_error):
     if not isinstance(new_offsets, dict):
         raise TypeError(type_error_str)
 
-    for topic, partitions in new_offsets.iteritems():
+    for topic, partitions in new_offsets.items():
         if not isinstance(partitions, dict):
             raise TypeError(type_error_str)
 
     topics = dict(
-        (topic, partitions.keys())
-        for topic, partitions in new_offsets.iteritems()
+        (topic, list(partitions.keys()))
+        for topic, partitions in new_offsets.items()
     )
 
     valid_topics = _verify_topics_and_partitions(kafka_client, topics, raise_on_error)
@@ -164,7 +164,7 @@ def _verify_commit_offsets_requests(kafka_client, new_offsets, raise_on_error):
             (partition, new_offsets[topic][partition])
             for partition in partitions
         ))
-        for topic, partitions in valid_topics.iteritems()
+        for topic, partitions in valid_topics.items()
         if partitions
     )
 
@@ -209,7 +209,7 @@ def get_current_consumer_offsets(
 
     group_offset_reqs = [
         OffsetFetchRequest(kafka_bytestring(topic), partition)
-        for topic, partitions in topics.iteritems()
+        for topic, partitions in topics.items()
         for partition in partitions
     ]
 
@@ -271,7 +271,7 @@ def get_topics_watermarks(kafka_client, topics, raise_on_error=True):
     highmark_offset_reqs = []
     lowmark_offset_reqs = []
 
-    for topic, partitions in topics.iteritems():
+    for topic, partitions in topics.items():
         # Batch watermark requests
         for partition in partitions:
             # Request the the latest offset
@@ -314,8 +314,8 @@ def get_topics_watermarks(kafka_client, topics, raise_on_error=True):
         aggregated_offsets[resp.topic][resp.partition]['lowmark'] = \
             resp.offsets[0]
 
-    for topic, partition_watermarks in aggregated_offsets.iteritems():
-        for partition, watermarks in partition_watermarks.iteritems():
+    for topic, partition_watermarks in aggregated_offsets.items():
+        for partition, watermarks in partition_watermarks.items():
             watermark_offsets.setdefault(
                 topic,
                 {},
@@ -346,7 +346,7 @@ def _commit_offsets_to_watermark(
                 kafka_bytestring(topic), partition,
                 watermark_offsets[topic][partition].highmark, None
             )
-            for topic, partitions in topics.iteritems()
+            for topic, partitions in topics.items()
             for partition in partitions
         ]
     elif watermark == LOW_WATERMARK:
@@ -355,7 +355,7 @@ def _commit_offsets_to_watermark(
                 kafka_bytestring(topic), partition,
                 watermark_offsets[topic][partition].lowmark, None
             )
-            for topic, partitions in topics.iteritems()
+            for topic, partitions in topics.items()
             for partition in partitions
         ]
     else:
@@ -379,7 +379,7 @@ def _commit_offsets_to_watermark(
             callback=_check_commit_response_error
         )
 
-    return filter(None, status)
+    return [_f for _f in status if _f]
 
 
 def advance_consumer_offsets(
@@ -520,8 +520,8 @@ def set_consumer_offsets(
             offset,
             None
         )
-        for topic, new_partition_offsets in valid_new_offsets.iteritems()
-        for partition, offset in new_partition_offsets.iteritems()
+        for topic, new_partition_offsets in valid_new_offsets.items()
+        for partition, offset in new_partition_offsets.items()
     ]
 
     if offset_storage == 'zookeeper' or not offset_storage:
@@ -540,7 +540,7 @@ def set_consumer_offsets(
             callback=_check_commit_response_error
         )
 
-    return filter(None, status)
+    return [_f for _f in status if _f]
 
 
 def _nullify_partition_offsets(partition_offsets):
@@ -558,6 +558,6 @@ def nullify_offsets(offsets):
     :returns: a dict topic: partition: offset
     """
     result = {}
-    for topic, partition_offsets in offsets.iteritems():
+    for topic, partition_offsets in offsets.items():
         result[topic] = _nullify_partition_offsets(partition_offsets)
     return result

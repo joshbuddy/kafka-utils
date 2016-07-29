@@ -61,7 +61,7 @@ class StatsCmd(ClusterManagerCmd):
             imbal['net_part_cnt_per_rg'] +
             imbal['topic_partition_cnt']
         )
-        print(
+        print((
             'Replication-group imbalance (replica-count): {imbal_repl}\n'
             'Net Partition-count imbalance/replication-group: '
             '{imbal_part_rg}\nNet Partition-count imbalance: {imbal_part}\n'
@@ -74,22 +74,22 @@ class StatsCmd(ClusterManagerCmd):
                 imbal_tp=imbal['topic_partition_cnt'],
                 imbal_net=net_imbalance,
             )
-        )
+        ))
         net_imbalance_with_leaders = net_imbalance + imbal['leader_cnt']
-        print(
+        print((
             'Leader-count imbalance: {imbal_leader}\n'
             'Net-cluster imbalance (including leader-imbalance): '
             '{imbal}'.format(
                 imbal=net_imbalance_with_leaders,
                 imbal_leader=imbal['leader_cnt'],
             )
-        )
+        ))
 
-        print(
+        print((
             'Total partition-movements: {total_movements}'.format(
                 total_movements=imbal['total_movements'],
             ),
-        )
+        ))
 
     def imbalance_stats(self, ct, base_assignment=None):
         print('Calculating cluster imbalance statistics...')

@@ -12,8 +12,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from __future__ import absolute_import
-from __future__ import print_function
+
+
 
 import logging
 import sys
@@ -70,7 +70,7 @@ class ListGroups(OffsetManagerBase):
         '''Get the group_id of groups committed into Kafka.'''
         kafka_group_reader = KafkaGroupReader(cluster_config)
         try:
-            return kafka_group_reader.read_groups().keys()
+            return list(kafka_group_reader.read_groups().keys())
         except:
             print(
                 "Error: No consumer offsets topic found in Kafka",
@@ -134,7 +134,7 @@ class KafkaGroupReader:
         self.watermarks = self.get_current_watermarks()
         while not self.finished():
             try:
-                message = self.consumer.next()
+                message = next(self.consumer)
                 max_offset = self.get_max_offset(message.partition)
                 if message.offset >= max_offset - 1:
                     self.finished_partitions.add(message.partition)
@@ -186,7 +186,7 @@ class KafkaGroupReader:
             [CONSUMER_OFFSET_TOPIC],
         )
         return {partition: offset for partition, offset
-                in offsets[CONSUMER_OFFSET_TOPIC].iteritems()
+                in offsets[CONSUMER_OFFSET_TOPIC].items()
                 if offset.highmark > offset.lowmark}
 
     def get_max_offset(self, partition):

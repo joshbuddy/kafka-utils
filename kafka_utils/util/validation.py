@@ -39,7 +39,7 @@ def assignment_to_plan(assignment):
         [{'topic': t_p[0],
           'partition': t_p[1],
           'replicas': replica
-          } for t_p, replica in assignment.iteritems()]
+          } for t_p, replica in assignment.items()]
     }
 
 
@@ -124,7 +124,7 @@ def _validate_plan_base(
         for p_data in new_plan['partitions']
     }
     invalid_replication_factor = False
-    for new_partition, replicas in new_partition_replicas.iteritems():
+    for new_partition, replicas in new_partition_replicas.items():
         base_replica_cnt = len(base_partition_replicas[new_partition])
         if len(replicas) != base_replica_cnt:
             invalid_replication_factor = True
@@ -166,7 +166,7 @@ def _validate_format(plan):
         _log.error(
             'Invalid or incomplete keys in given plan. Expected: "version", '
             '"partitions". Found:{keys}'
-            .format(keys=', '.join(plan.keys())),
+            .format(keys=', '.join(list(plan.keys()))),
         )
         return False
 
@@ -196,11 +196,11 @@ def _validate_format(plan):
         if set(p_data.keys()) != set(['topic', 'partition', 'replicas']):
             _log.error(
                 'Invalid keys in partition-data {keys}'
-                .format(keys=', '.join(p_data.keys())),
+                .format(keys=', '.join(list(p_data.keys()))),
             )
             return False
         # Check types
-        if not isinstance(p_data['topic'], unicode):
+        if not isinstance(p_data['topic'], str):
             _log.error(
                 '"topic" of type unicode expected {p_data}, found {t_type}'
                 .format(p_data=p_data, t_type=type(p_data['topic'])),
@@ -254,7 +254,7 @@ def _validate_plan(plan):
         for p_data in plan['partitions']
     ]
     duplicate_partitions = [
-        partition for partition, count in Counter(partition_names).iteritems()
+        partition for partition, count in Counter(partition_names).items()
         if count > 1
     ]
     if duplicate_partitions:
@@ -269,7 +269,7 @@ def _validate_plan(plan):
     for p_data in plan['partitions']:
         dup_replica_brokers = [
             broker
-            for broker, count in Counter(p_data['replicas']).items()
+            for broker, count in list(Counter(p_data['replicas']).items())
             if count > 1
         ]
         if dup_replica_brokers:
@@ -288,7 +288,7 @@ def _validate_plan(plan):
     for partition_info in plan['partitions']:
         topic = partition_info['topic']
         replication_factor = len(partition_info['replicas'])
-        if topic in topic_replication_factor.keys():
+        if topic in list(topic_replication_factor.keys()):
             if topic_replication_factor[topic] != replication_factor:
                 _log.error(
                     'Mismatch in replication-factor of partitions for topic '

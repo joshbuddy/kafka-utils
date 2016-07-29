@@ -25,18 +25,18 @@ PRODUCED_MSG_COUNT = 82
 CONSUMED_MSG_COUNT = 39
 
 
-@given(u'we have an existing kafka cluster with a topic')
+@given('we have an existing kafka cluster with a topic')
 def step_impl1(context):
     context.topic = create_random_topic(1, 1)
 
 
-@when(u'we produce some number of messages into the topic')
+@when('we produce some number of messages into the topic')
 def step_impl2(context):
     produce_example_msg(context.topic, num_messages=PRODUCED_MSG_COUNT)
     context.msgs_produced = PRODUCED_MSG_COUNT
 
 
-@when(u'we consume some number of messages from the topic')
+@when('we consume some number of messages from the topic')
 def step_impl3(context):
     context.group = create_random_group_id()
     context.consumer = create_consumer_group(
@@ -47,11 +47,11 @@ def step_impl3(context):
     context.msgs_consumed = CONSUMED_MSG_COUNT
 
 
-@given(u'we have initialized kafka offsets storage')
+@given('we have initialized kafka offsets storage')
 def step_impl4(context):
     initialize_kafka_offsets_topic()
 
 
-@given(u'we have an existing kafka cluster')
+@given('we have an existing kafka cluster')
 def step_impl5(context):
     pass

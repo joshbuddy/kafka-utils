@@ -31,7 +31,7 @@ from .util import get_partitions_per_broker
 def standard_deviation(data):
     """Return standard deviation for given data with list of values."""
     avg_data = sum(data) / len(data)
-    variance = map(lambda x: (x - avg_data) ** 2, data)
+    variance = [(x - avg_data) ** 2 for x in data]
     avg_variance = sum(variance) / len(data)
     return sqrt(avg_variance)
 
@@ -120,13 +120,13 @@ def get_leader_imbalance_stats(brokers):
     leaders_per_broker = get_leaders_per_broker(brokers)
 
     # Calculate standard deviation of leader imbalance
-    stdev_imbalance = standard_deviation(leaders_per_broker.values())
+    stdev_imbalance = standard_deviation(list(leaders_per_broker.values()))
 
     # Calculation net imbalance
-    net_imbalance = get_net_imbalance(leaders_per_broker.values())
+    net_imbalance = get_net_imbalance(list(leaders_per_broker.values()))
     leaders_per_broker_id = dict(
         (broker.id, count)
-        for broker, count in leaders_per_broker.iteritems()
+        for broker, count in leaders_per_broker.items()
     )
     return stdev_imbalance, net_imbalance, leaders_per_broker_id
 
@@ -168,7 +168,7 @@ def get_topic_imbalance_stats(brokers, topics):
             extra_partition_cnt_per_broker[broker.id] += extra_partitions
 
     # Net extra partitions over all brokers
-    net_imbalance = sum(extra_partition_cnt_per_broker.itervalues())
+    net_imbalance = sum(extra_partition_cnt_per_broker.values())
     return net_imbalance, extra_partition_cnt_per_broker
 
 
@@ -179,13 +179,13 @@ def get_partition_imbalance_stats(brokers):
     partitions_per_broker = get_partitions_per_broker(brokers)
 
     # Calculate standard deviation of partition imbalance
-    stdev_imbalance = standard_deviation(partitions_per_broker.values())
+    stdev_imbalance = standard_deviation(list(partitions_per_broker.values()))
 
     # Net total imbalance of partition count over all brokers
-    net_imbalance = get_net_imbalance(partitions_per_broker.values())
+    net_imbalance = get_net_imbalance(list(partitions_per_broker.values()))
     partitions_per_broker_id = dict(
         (partition.id, count)
-        for partition, count in partitions_per_broker.iteritems()
+        for partition, count in partitions_per_broker.items()
     )
     return stdev_imbalance, net_imbalance, partitions_per_broker_id
 
@@ -201,7 +201,7 @@ def calculate_partition_movement(prev_assignment, curr_assignment):
     """
     total_movements = 0
     movements = {}
-    for prev_partition, prev_replicas in prev_assignment.iteritems():
+    for prev_partition, prev_replicas in prev_assignment.items():
         curr_replicas = curr_assignment[prev_partition]
         diff = len(set(curr_replicas) - set(prev_replicas))
         if diff:
@@ -249,28 +249,28 @@ def imbalance_value_all(ct, base_assignment=None):
     # Partition-count imbalance
     (stdev_imbalance, imbal_part, partitions_per_broker) = \
         partition_imbalance(
-            ct.rgs.values(),
-            ct.brokers.values(),
+            list(ct.rgs.values()),
+            list(ct.brokers.values()),
             cluster_wide=True,
     )[0]
     imbal_part_per_rg = partition_imbalance(
-        ct.rgs.values(),
-        ct.brokers.values(),
+        list(ct.rgs.values()),
+        list(ct.brokers.values()),
     )
     net_imbal_part_per_rg = sum(imbal_part_rg[1] for imbal_part_rg in imbal_part_per_rg)
 
     # Duplicate-replica-count imbalance
     imbal_replica, duplicate_replica_count_per_rg = \
-        replication_group_imbalance(ct.rgs.values(), ct.partitions.values())
+        replication_group_imbalance(list(ct.rgs.values()), list(ct.partitions.values()))
 
     # Same topic-partition count
     imbal_topic, same_topic_partition_count_per_broker = \
-        topic_imbalance(ct.brokers.values(), ct.topics.values())
+        topic_imbalance(list(ct.brokers.values()), list(ct.topics.values()))
 
     imbal_leader = 0
     # Leader-count imbalance
     stdev_imbalance, imbal_leader, leaders_per_broker = \
-        leader_imbalance(ct.brokers.values())
+        leader_imbalance(list(ct.brokers.values()))
 
     # Display stats to stdout
     display_partition_count_per_broker(

@@ -14,7 +14,7 @@
 # limitations under the License.
 from behave import then
 from behave import when
-from util import call_cmd
+from .util import call_cmd
 
 
 def call_under_replicated():
@@ -26,11 +26,11 @@ def call_under_replicated():
     return call_cmd(cmd)
 
 
-@when(u'we call the under_replicated command')
+@when('we call the under_replicated command')
 def step_impl2(context):
     context.under_replicated_out = call_under_replicated()
 
 
-@then(u'OK under_replicated will be printed')
+@then('OK under_replicated will be printed')
 def step_impl5(context):
     assert context.under_replicated_out == 'OK: No under replicated partitions.\n', context.under_replicated_out

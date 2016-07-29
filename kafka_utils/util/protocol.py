@@ -45,11 +45,11 @@ class KafkaToolProtocol(KafkaProtocol):
         message.append(struct.pack('>q', -1))   # Retention time
         message.append(struct.pack('>i', len(grouped_payloads)))
 
-        for topic, topic_payloads in grouped_payloads.items():
+        for topic, topic_payloads in list(grouped_payloads.items()):
             message.append(write_short_string(topic))
             message.append(struct.pack('>i', len(topic_payloads)))
 
-            for partition, payload in topic_payloads.items():
+            for partition, payload in list(topic_payloads.items()):
                 message.append(struct.pack('>iq', partition, payload.offset))
                 message.append(write_short_string(payload.metadata))
 

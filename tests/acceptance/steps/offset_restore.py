@@ -57,7 +57,7 @@ def call_offset_restore(offsets_file, storage=None):
     return call_cmd(cmd)
 
 
-@given(u'we have a json offsets file')
+@given('we have a json offsets file')
 def step_impl2(context):
     context.restored_offset = RESTORED_OFFSET
     context.offsets_file = create_restore_file(
@@ -68,17 +68,17 @@ def step_impl2(context):
     assert os.path.isfile(context.offsets_file.name)
 
 
-@when(u'we call the offset_restore command with the offsets file')
+@when('we call the offset_restore command with the offsets file')
 def step_impl3(context):
     call_offset_restore(context.offsets_file.name)
 
 
-@when(u'we call the offset_restore command with the offsets file and kafka storage')
+@when('we call the offset_restore command with the offsets file and kafka storage')
 def step_impl3_2(context):
     call_offset_restore(context.offsets_file.name, storage='kafka')
 
 
-@then(u'the committed offsets will match the offsets file')
+@then('the committed offsets will match the offsets file')
 def step_impl4(context):
     cluster_config = get_cluster_config()
     with ZK(cluster_config) as zk:

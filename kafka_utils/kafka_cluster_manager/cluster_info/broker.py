@@ -166,10 +166,10 @@ class Broker(object):
                 otherwise it moves ahead with next partition.
         """
         # Possible partitions which can grant leadership to broker
-        owned_partitions = filter(
+        owned_partitions = list(filter(
             lambda p: self is not p.leader and len(p.replicas) > 1,
             self.partitions,
-        )
+        ))
         for partition in owned_partitions:
             # Partition not available to grant leadership when:-
             # 1. Broker is already under leadership change or
@@ -232,16 +232,16 @@ class Broker(object):
         * If it is unsuccessful, it tries for next-follower or next-partition whatever
             or returns if none available.
         """
-        owned_partitions = filter(
+        owned_partitions = list(filter(
             lambda p: self is p.leader and len(p.replicas) > 1,
             self.partitions,
-        )
+        ))
         for partition in owned_partitions:
             # Skip using same partition with broker if already used before
-            potential_new_leaders = filter(
+            potential_new_leaders = list(filter(
                 lambda f: f not in skip_brokers,
                 partition.followers,
-            )
+            ))
             for follower in potential_new_leaders:
                 # Don't swap the broker-pair if already swapped before
                 # in same partition

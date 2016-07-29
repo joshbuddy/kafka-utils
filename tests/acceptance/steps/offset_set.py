@@ -47,13 +47,13 @@ def call_offset_set(groupid, offsets_data, storage=None, force=False):
     return call_cmd(cmd)
 
 
-@when(u'we call the offset_set command with a groupid and offset data')
+@when('we call the offset_set command with a groupid and offset data')
 def step_impl2(context):
     context.offsets = offsets_data(context.topic, SET_OFFSET)
     call_offset_set(context.group, context.offsets)
 
 
-@when(u'we call the offset_set command and commit into kafka')
+@when('we call the offset_set command and commit into kafka')
 def step_impl2_2(context):
     if not hasattr(context, 'group'):
         context.group = 'test_kafka_offset_group'
@@ -62,14 +62,14 @@ def step_impl2_2(context):
     call_offset_set(context.group, context.offsets, storage='kafka')
 
 
-@when(u'we call the offset_set command with a new groupid and the force option')
+@when('we call the offset_set command with a new groupid and the force option')
 def step_impl2_3(context):
     context.offsets = offsets_data(context.topic, SET_OFFSET)
     context.group = 'offset_set_created_group'
     call_offset_set(context.group, context.offsets, force=True)
 
 
-@then(u'the committed offsets will match the specified offsets')
+@then('the committed offsets will match the specified offsets')
 def step_impl3(context):
     cluster_config = get_cluster_config()
     with ZK(cluster_config) as zk:

@@ -12,9 +12,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from __future__ import absolute_import
-from __future__ import print_function
-from __future__ import unicode_literals
+
+
+
 
 import json
 import sys
@@ -65,9 +65,9 @@ class OffsetRestore(OffsetManagerBase):
                 # Create new dict with partition-keys as integers
                 parsed_offsets['groupid'] = parsed_offsets_data['groupid']
                 parsed_offsets['offsets'] = {}
-                for topic, topic_data in parsed_offsets_data['offsets'].iteritems():
+                for topic, topic_data in parsed_offsets_data['offsets'].items():
                     parsed_offsets['offsets'][topic] = {}
-                    for partition, offset in topic_data.iteritems():
+                    for partition, offset in topic_data.items():
                         parsed_offsets['offsets'][topic][int(partition)] = offset
                 return parsed_offsets
             except ValueError:
@@ -85,7 +85,7 @@ class OffsetRestore(OffsetManagerBase):
         """
         new_offsets = defaultdict(dict)
         try:
-            for topic, partitions in topic_partitions.iteritems():
+            for topic, partitions in topic_partitions.items():
                 # Validate current offsets in range of low and highmarks
                 # Currently we only validate for positive offsets and warn
                 # if out of range of low and highmarks
@@ -164,8 +164,8 @@ class OffsetRestore(OffsetManagerBase):
             consumer_group = parsed_consumer_offsets['groupid']
             topics_offset_data = parsed_consumer_offsets['offsets']
             topic_partitions = dict(
-                (topic, [partition for partition in offset_data.keys()])
-                for topic, offset_data in topics_offset_data.iteritems()
+                (topic, [partition for partition in list(offset_data.keys())])
+                for topic, offset_data in topics_offset_data.items()
             )
         except IndexError:
             print(

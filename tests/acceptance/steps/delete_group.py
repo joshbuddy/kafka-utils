@@ -40,7 +40,7 @@ def step_impl2_2(context):
     call_delete_group(context.group, storage='kafka')
 
 
-@then(u'the specified group will not be found')
+@then('the specified group will not be found')
 def step_impl5(context):
     pattern = 'Error: Consumer Group ID {} does' \
               ' not exist.'.format(context.group)

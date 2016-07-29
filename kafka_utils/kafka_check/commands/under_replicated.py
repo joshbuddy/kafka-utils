@@ -12,7 +12,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from __future__ import absolute_import
+
 
 from kafka_utils.kafka_check import status_code
 from kafka_utils.kafka_check.commands.command import get_broker_id
@@ -67,10 +67,10 @@ class UnderReplicatedCmd(KafkaCheckCmd):
         else:
             if self.args.verbose:
                 for (topic, partition) in under_replicated:
-                    print('{topic}:{partition}'.format(
+                    print(('{topic}:{partition}'.format(
                         topic=topic,
                         partition=partition,
-                    ))
+                    )))
 
             msg = "{under_replicated} under replicated partitions.".format(
                 under_replicated=len(under_replicated),
@@ -90,8 +90,8 @@ def _check_run_on_first_broker(broker_list, broker_id, data_path):
 def _process_topic_partition_metadata(topic_partitions_metadata):
     """Return set with under replicated partitions."""
     under_replicated = set()
-    for partitions in topic_partitions_metadata.values():
-        for metadata in partitions.values():
+    for partitions in list(topic_partitions_metadata.values()):
+        for metadata in list(partitions.values()):
             if int(metadata.error) == REPLICA_NOT_AVAILABLE_ERROR:
                 under_replicated.add((metadata.topic, metadata.partition))
 
